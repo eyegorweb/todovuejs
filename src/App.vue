@@ -6,10 +6,19 @@
     <!--</div>-->
     <!--<router-view/>-->
     <input type="text" v-bind:value="text"  v-on:input="text = $event.target.value" @keyup.enter="addTodo">
+    <br>
+    <label>
+      <input type="radio" value="All" v-model="textFiltered">All
+    </label>
+    <label>
+      <input type="radio" value="finished" v-model="textFiltered">Finished
+    </label>
+    <label>
+      <input type="radio" value="unfinished" v-model="textFiltered">Unfinished
+    </label>
     <!--<input type="text" v-model="text" @keyup.enter="addTodo">-->
     <ul>
-      <Todoitem v-for="(item, i) of todos" :key="item.id" :todoitem="item" @toggle="toggle" @remove="deleteTodo(todos, item.id)"></Todoitem>
-      <Todoitem v-for="(item, i) in todos2" :key="item.id" v-bind:todoitem="item" @toggle="toggle" @remove="deleteTodo(todos2, item.id)"></Todoitem>
+      <Todoitem v-for="item of filteredTodos" :key="item.id" :todoitem="item"  @remove="deleteTodo(item.id)"></Todoitem>
     </ul>
 
     <pre>{{ $data }}</pre>
@@ -27,16 +36,12 @@ export default {
 
   data() {
     return {
-      text: "Type your text",
+      text: "",
+      textFiltered: "All",
       todos: [
-        { text: "todo item 1", seen: true, isEditing: true, id: id++ },
-        { text: "todo item 2", seen: true, isEditing: true, id: id++ },
-        { text: "todo item 3", seen: false, isEditing: false, id: id++ }
-      ],
-      todos2: [
-        { text: "todo item 1", seen: true, isEditing: true, id: id++ },
-        { text: "todo item 2", seen: true, isEditing: true, id: id++ },
-        { text: "todo item 3", seen: false, isEditing: false, id: id++ }
+        { text: "todo item 1", isFinished: true, isEditing: false, id: id++ },
+        { text: "todo item 2", isFinished: false, isEditing: true, id: id++ },
+        { text: "todo item 3", isFinished: false, isEditing: true, id: id++ }
       ]
     };
   },
@@ -44,18 +49,25 @@ export default {
   methods: {
     addTodo() {
       if (!this.text) return;
-      this.todos.push({ text: this.text, seen: true, isEditing: true, id: id++ });
+      this.todos.push({ text: this.text, isFinished: false, isEditing: true, id: id++ });
       this.text = "";
     },
-    deleteTodo(array, id) {
-      console.log("delete todo item ", id);
-      array.splice(array.findIndex(todo => todo.id === id), 1)
+    deleteTodo(id) {
+      this.todos.splice(this.todos.findIndex(todo => todo.id === id), 1)
     }
   },
 
   computed: {
-    toggle() {
-      return this.todos.filter(todo => (todo.seen ? !todo.seen : todo.seen));
+    finishedTodos() {
+      return this.todos.filter(todo => todo.isFinished);
+    },
+    unFinishedTodos() {
+      return this.todos.filter(todo => !todo.isFinished);
+    },
+    filteredTodos() {
+      if(this.textFiltered === "finished") return this.finishedTodos;
+      if(this.textFiltered === "unfinished") return this.unFinishedTodos;
+      return this.todos;
     }
   }
 };
