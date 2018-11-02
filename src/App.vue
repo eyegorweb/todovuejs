@@ -39,9 +39,9 @@ export default {
       text: "",
       textFiltered: "All",
       todos: [
-        { text: "todo item 1", isFinished: true, isEditing: false, id: id++ },
-        { text: "todo item 2", isFinished: false, isEditing: true, id: id++ },
-        { text: "todo item 3", isFinished: false, isEditing: true, id: id++ }
+        { text: "todo item 1", isFinished: true, id: id++ },
+        { text: "todo item 2", isFinished: false, id: id++ },
+        { text: "todo item 3", isFinished: false, id: id++ }
       ]
     };
   },
@@ -49,14 +49,14 @@ export default {
   methods: {
     addTodo() {
       if (!this.text) return;
-      this.todos.push({ text: this.text, isFinished: false, isEditing: true, id: id++ });
+      this.todos.push({ text: this.text, isFinished: false, id: id++ });
       this.text = "";
     },
     deleteTodo(id) {
       this.todos.splice(this.todos.findIndex(todo => todo.id === id), 1)
     },
     updateTodo(newTodo){
-      this.todos.splice(this.todos.findIndex(t => newTodo.id === t.id), 1, newTodo);
+      this.todos.splice(this.todos.findIndex(todo => newTodo.id === todo.id), 1, newTodo);
     }
   },
 
