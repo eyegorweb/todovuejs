@@ -18,7 +18,7 @@
     </label>
     <!--<input type="text" v-model="text" @keyup.enter="addTodo">-->
     <ul>
-      <Todoitem v-for="item of filteredTodos" :key="item.id" :todoitem="item"  @remove="deleteTodo(item.id)"></Todoitem>
+      <Todoitem v-for="item of filteredTodos" :key="item.id" :todoitem="item"  @remove="deleteTodo(item.id)" @update="updateTodo"></Todoitem>
     </ul>
 
     <pre>{{ $data }}</pre>
@@ -54,6 +54,9 @@ export default {
     },
     deleteTodo(id) {
       this.todos.splice(this.todos.findIndex(todo => todo.id === id), 1)
+    },
+    updateTodo(newTodo){
+      this.todos.splice(this.todos.findIndex(t => newTodo.id === t.id), 1, newTodo);
     }
   },
 
